@@ -32,7 +32,7 @@ def handler(event, context):
     """
 
     # FrontISTR で 計算する
-    os.chdir('/function')
+    os.chdir('/function/tmp')
     proc = subprocess.call('fistr1', shell=True)
 
     # 書き込んだ .res ファイルを 読み込む
