@@ -5,4 +5,4 @@ WORKDIR /tmp
 COPY app/* /tmp
 COPY tmp/* /tmp
 
-CMD [ "run.sh" ]
+CMD [ "./run.sh" ]
