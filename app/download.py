@@ -2,6 +2,8 @@ import boto3
 import os
 import shutil
 
+print('入力データ(.zip)を取得します!!')
+
 # 入力データ(zipファイル)の保存場所S3を取得
 EVENT_BUCKET = os.environ["EVENT_BUCKET"]
 EVENT_OBJECKT_KEY = os.environ["EVENT_OBJECKT_KEY"]
@@ -16,3 +18,6 @@ s3.download_file(bucket, EVENT_OBJECKT_KEY, zip_filepath)
 
 # zipファイルを解凍する
 shutil.unpack_archive(zip_filepath, '/tmp/')
+
+
+print('解析する準備が整いました!!')

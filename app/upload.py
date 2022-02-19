@@ -3,6 +3,8 @@ import os
 from os import path
 import glob
 
+print('解析結果ファイルのアップロードを開始します!!')
+
 # 出力フォルダS3を取得
 DESTINATION_BUCKET = os.environ["DESTINATION_BUCKET"]
 s3 = boto3.resource("s3")
@@ -20,3 +22,5 @@ for path in files:
         continue
 
     bucket.upload_file(path, filename)
+
+print('解析結果ファイルのアップロードに成功しました!!')
