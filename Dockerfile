@@ -1,10 +1,15 @@
-FROM python:3
+FROM sasaco/frontistr-python:latest
 
-WORKDIR /usr/src/app
+RUN mkdir -p /usr/src/app
 
-COPY app/requirements.txt ./
-RUN pip install --no-cache-dir -r requirements.txt
+COPY app/* /usr/src/app
 
-COPY app/script.py ./
+# テスト用
+COPY tmp/* /tmp
 
-CMD [ "python", "./script.py" ]
+# 本番用
+# COPY tmp/run.sh /tmp/run.sh
+
+WORKDIR /tmp
+
+CMD [ "run.sh" ]
