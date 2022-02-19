@@ -1,7 +1,7 @@
 #!/bin/bash
 
-python3 /usr/src/app/download.py
+python3 download.py
 
-# fistr1 -t 1
+fistr1 -t 1
 
-# python3 /usr/src/app/upload.py
+# python3 upload.py

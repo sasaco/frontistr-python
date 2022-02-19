@@ -1,55 +1,17 @@
-import json
-import glob
-import subprocess
+import boto3
 import os
-import time
+from os import path
 
-def handler(event, context):
+EVENT_BUCKET = os.environ["EVENT_BUCKET"]
+EVENT_OBJECKT_KEY = os.environ["EVENT_OBJECKT_KEY"]
 
-    cnt_path = '/function/tmp/hinge.cnt'
-    mesh_path = '/function/tmp/hinge.mesh'
-    res_path = '/function/tmp/hinge.res.*'
-    vis_path = '/function/tmp/hinge_vis_*'
+DESTINATION_BUCKET = os.environ["DESTINATION_BUCKET"]
+DESTINATION_OBJECKT_DIR = os.environ["DESTINATION_OBJECKT_DIR"]
 
-    """
-    # 引数
-    if "body" in event:
-        js = json.loads(event["body"])
-    else:
-        js = event
-    cnt = js['cnt']
-    mesh = js['mesh']
+s3 = boto3.resource("s3")
 
-    # .cnt ファイルを 書き込む
-    fout=open(cnt_path, 'w')
-    print(cnt, file=fout)
-    fout.close()
-
-    # .mesh ファイルを 書き込む
-    fout=open(mesh_path, 'w')
-    print(mesh, file=fout)
-    fout.close()
-    """
-
-    # FrontISTR で 計算する
-    os.chdir('/function/tmp')
-    proc = subprocess.call('fistr1', shell=True)
-
-    # 書き込んだ .res ファイルを 読み込む
-    res = []
-    for r in glob.glob(res_path):
-        f = open(r)
-        res.append(f.read())  # ファイル終端まで全て読んだデータを返す
-        f.close()
-
-    # 返す
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Origin":"*",
-            "Content-Type": "application/json"
-        },
-        "body": json.dumps({
-            "res": res,
-        }),
-    }
+destination_object_key = path.join(
+    DESTINATION_OBJECKT_DIR, path.basename(EVENT_OBJECKT_KEY)
+)
+event_object = s3.Object(DESTINATION_BUCKET, destination_object_key)
+event_object.copy({"Bucket": EVENT_BUCKET, "Key": EVENT_OBJECKT_KEY})
