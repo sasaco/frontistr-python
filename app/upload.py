@@ -1,17 +1,22 @@
 import boto3
 import os
 from os import path
+import glob
 
-EVENT_BUCKET = os.environ["EVENT_BUCKET"]
-EVENT_OBJECKT_KEY = os.environ["EVENT_OBJECKT_KEY"]
-
+# 出力フォルダS3を取得
 DESTINATION_BUCKET = os.environ["DESTINATION_BUCKET"]
-DESTINATION_OBJECKT_DIR = os.environ["DESTINATION_OBJECKT_DIR"]
-
 s3 = boto3.resource("s3")
+bucket = s3.Bucket(DESTINATION_BUCKET)
 
-destination_object_key = path.join(
-    DESTINATION_OBJECKT_DIR, path.basename(EVENT_OBJECKT_KEY)
-)
-event_object = s3.Object(DESTINATION_BUCKET, destination_object_key)
-event_object.copy({"Bucket": EVENT_BUCKET, "Key": EVENT_OBJECKT_KEY})
+# 出力データを収集する
+files = glob.glob("/tmp/*")
+
+# 解析結果ファイルを出力フォルダS3にコピー
+for path in files:
+    filename = os.path.basename(path)
+
+    # 解析結果に関係ないファイルは除外する
+    if filename == 'run.sh' or filename == 'download.py' or filename == 'upload.py':
+        continue
+
+    bucket.upload_file(path, filename)
