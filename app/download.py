@@ -12,8 +12,7 @@ bucket = s3.Bucket(EVENT_BUCKET)
 zip_filepath = '/tmp/' + EVENT_OBJECKT_KEY.split('/')[-1]
 
 # zipファイルを取得する
-s3.download_file(bucket, EVENT_OBJECKT_KEY, zip_filepath)
+bucket.download_file(EVENT_OBJECKT_KEY, zip_filepath)
 
 # zipファイルを解凍する
 shutil.unpack_archive(zip_filepath, '/tmp/')
-
