@@ -11,7 +11,7 @@ bucket = s3.Bucket(DESTINATION_BUCKET)
 
 
 # 出力データを収集する
-files = glob.glob("/tmp/*", recursive=True)
+files = glob.glob("/tmp/*")
 
 # 解析結果ファイルを出力フォルダS3にコピー
 for filepath in files:
